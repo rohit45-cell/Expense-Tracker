@@ -18,9 +18,7 @@ Python Full Stack Developer
 
 🌐 Portfolio: https://ganesh45.netlify.app
 
-🚀 Demo
 
-https://github.com/user-attachments/assets/d11f29cc-0f22-4882-a109-841a73a6a75e
 
 ✨ Features
 
