@@ -1,31 +1,36 @@
 """
 Django settings for expensetrack project.
-Local demo configuration – fully working
+Production-ready for PythonAnywhere
 """
 
 from pathlib import Path
 import os
 from django.contrib import messages
 
+# ===============================
 # BASE DIRECTORY
+# ===============================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ===============================
-# ENVIRONMENT (SAFE DEFAULT)
+# ENVIRONMENT
 # ===============================
-ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'production')
 
 # ===============================
 # SECURITY
 # ===============================
 SECRET_KEY = os.environ.get(
     'SECRET_KEY',
-    'django-insecure-local-demo-key-123456'
+    'django-insecure-change-this-in-production'
 )
 
-DEBUG = True
+DEBUG = False   # 🔴 MUST be False on PythonAnywhere
 
-ALLOWED_HOSTS = ['ganesh.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    'ganesh45.pythonanywhere.com',
+    'www.ganesh45.pythonanywhere.com',
+]
 
 # ===============================
 # APPLICATIONS
@@ -44,20 +49,15 @@ INSTALLED_APPS = [
     'preferences',
     'incomes',
 
-    # Tailwind & reload
+    # Tailwind
     'tailwind',
     'theme',
-    'django_browser_reload',
 ]
 
 TAILWIND_APP_NAME = 'theme'
 
-# Windows npm path
-NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
-
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+# ❌ REMOVE Windows npm path
+# NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
 # ===============================
 # MIDDLEWARE
@@ -70,7 +70,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 # ===============================
@@ -97,7 +96,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'expensetrack.wsgi.application'
 
 # ===============================
-# DATABASE (SQLITE – NO SETUP)
+# DATABASE (SQLite – OK for demo)
 # ===============================
 DATABASES = {
     'default': {
@@ -110,36 +109,28 @@ DATABASES = {
 # PASSWORD VALIDATION
 # ===============================
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 # ===============================
 # INTERNATIONALIZATION
 # ===============================
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
 USE_TZ = True
 
 # ===============================
-# STATIC FILES
+# STATIC FILES (VERY IMPORTANT)
 # ===============================
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# ❌ REMOVE STATICFILES_DIRS on PythonAnywhere
+# STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # ===============================
 # DEFAULT PRIMARY KEY
