@@ -1,0 +1,827 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* Container animations */
+    .container.mx-auto.mt-8 {
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Header animations */
+    .flex.justify-between.items-center.mb-4.mx-4 {
+        animation: slideInLeft 0.6s ease-out;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Title gradient animation */
+    h1.text-4xl.font-extrabold {
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: gradientShift 3s ease infinite;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 0.5rem;
+    }
+
+    h1.text-4xl.font-extrabold::after {
+        content: '👤';
+        position: absolute;
+        right: -35px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 2rem;
+        animation: profileFloat 2s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+        0%, 100% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    @keyframes profileFloat {
+        0%, 100% {
+            transform: translateY(-50%) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-60%) rotate(10deg);
+        }
+    }
+
+    /* Delete button animation */
+    a.bg-red-500 {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background-size: 200% 200%;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    a.bg-red-500:hover {
+        background-position: right center;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 
+            0 12px 25px rgba(239, 68, 68, 0.4),
+            0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    a.bg-red-500:active {
+        transform: translateY(-1px) scale(0.98);
+    }
+
+    a.bg-red-500::before {
+        content: '🗑️';
+        position: absolute;
+        left: -25px;
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    a.bg-red-500:hover::before {
+        left: 15px;
+        opacity: 1;
+    }
+
+    a.bg-red-500::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    a.bg-red-500:active::after {
+        width: 300px;
+        height: 300px;
+    }
+
+    /* Form card animation */
+    .bg-white.shadow-md.rounded-lg.p-6 {
+        animation: cardScaleIn 0.6s ease-out 0.2s both;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(229, 231, 235, 0.8);
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.08),
+            0 0 0 1px rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dark .bg-white.shadow-md.rounded-lg.p-6 {
+        background: rgba(17, 24, 39, 0.95);
+        border-color: rgba(55, 65, 81, 0.8);
+    }
+
+    .bg-white.shadow-md.rounded-lg.p-6::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(59, 130, 246, 0.1),
+            transparent
+        );
+        animation: cardShine 3s infinite;
+    }
+
+    @keyframes cardScaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    @keyframes cardShine {
+        0% {
+            left: -100%;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+
+    /* Form groups animations */
+    .mb-4 {
+        animation: formGroupSlide 0.5s ease-out;
+        animation-fill-mode: both;
+    }
+
+    @keyframes formGroupSlide {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Stagger form groups */
+    .mb-4:nth-child(1) {
+        animation-delay: 0.3s;
+    }
+
+    .mb-4:nth-child(2) {
+        animation-delay: 0.4s;
+    }
+
+    .mb-4:nth-child(3) {
+        animation-delay: 0.5s;
+    }
+
+    .mb-4:nth-child(4) {
+        animation-delay: 0.6s;
+    }
+
+    /* Input field animations */
+    input[type="text"] {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        border-width: 2px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .dark input[type="text"] {
+        background: rgba(31, 41, 55, 0.9) !important;
+        border-color: #4b5563 !important;
+        color: white;
+    }
+
+    input[type="text"]:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+        border-color: #3b82f6 !important;
+    }
+
+    input[type="text"]:focus:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 12px 25px rgba(59, 130, 246, 0.25),
+            0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        animation: inputFocus 2s infinite;
+    }
+
+    input[type="text"]:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        background: #f9fafb !important;
+    }
+
+    .dark input[type="text"]:disabled {
+        background: #374151 !important;
+    }
+
+    @keyframes inputFocus {
+        0%, 100% {
+            box-shadow: 
+                0 12px 25px rgba(59, 130, 246, 0.25),
+                0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        50% {
+            box-shadow: 
+                0 12px 30px rgba(59, 130, 246, 0.35),
+                0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+    }
+
+    /* Label animations */
+    label.block.text-sm.font-medium.text-gray-700 {
+        animation: labelSlideIn 0.5s ease-out;
+        animation-fill-mode: both;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    label.block.text-sm.font-medium.text-gray-700::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    @keyframes labelSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Submit button animation */
+    input[type="submit"] {
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        background-size: 200% 200%;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        border: none;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        animation: buttonPulse 3s infinite;
+    }
+
+    @keyframes buttonPulse {
+        0%, 100% {
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+        50% {
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+    }
+
+    input[type="submit"]:hover {
+        background-position: right center;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 
+            0 15px 30px rgba(59, 130, 246, 0.4),
+            0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    }
+
+    input[type="submit"]:active {
+        transform: translateY(-1px) scale(0.98);
+    }
+
+    input[type="submit"]::before {
+        content: '💾';
+        position: absolute;
+        left: -25px;
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    input[type="submit"]:hover::before {
+        left: 20px;
+        opacity: 1;
+    }
+
+    input[type="submit"]::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    input[type="submit"]:active::after {
+        width: 300px;
+        height: 300px;
+    }
+
+    /* Password strength indicator */
+    .password-strength {
+        margin-top: 0.5rem;
+        height: 4px;
+        border-radius: 2px;
+        background: #e5e7eb;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dark .password-strength {
+        background: #4b5563;
+    }
+
+    .password-strength::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e);
+        transition: width 0.3s ease;
+        border-radius: 2px;
+    }
+
+    /* Success animation for saved state */
+    .saved-success {
+        animation: successPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes successPulse {
+        0%, 100% {
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+        }
+        50% {
+            box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+        }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .flex.justify-between.items-center.mb-4.mx-4 {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        h1.text-4xl.font-extrabold::after {
+            position: static;
+            transform: none;
+            margin-left: 0.5rem;
+            display: inline-block;
+        }
+        
+        .mb-4.flex.gap-2 {
+            flex-direction: column;
+        }
+        
+        .w-\[50\%\] {
+            width: 100% !important;
+        }
+        
+        input[type="submit"]:hover {
+            transform: translateY(-2px);
+        }
+        
+        a.bg-red-500:hover {
+            transform: translateY(-2px);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .bg-white.shadow-md.rounded-lg.p-6 {
+            padding: 1rem;
+            margin: 0 0.5rem;
+        }
+        
+        input[type="submit"]::before,
+        a.bg-red-500::before {
+            display: none;
+        }
+    }
+
+    /* Loading animation for form submission */
+    .loading-submit {
+        position: relative;
+        color: transparent !important;
+    }
+
+    .loading-submit::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
+
+    /* User info preview */
+    .user-info-preview {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        border-radius: 12px;
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    .user-info-preview .avatar {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        animation: avatarPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes avatarPulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .user-info-preview .info {
+        flex: 1;
+    }
+
+    .user-info-preview .name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+    }
+
+    .dark .user-info-preview .name {
+        color: #f9fafb;
+    }
+
+    .user-info-preview .email {
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+
+    .dark .user-info-preview .email {
+        color: #9ca3af;
+    }
+</style>
+
+<div class="container mx-auto mt-8">
+    <div class="flex justify-between items-center mb-4 mx-4">
+        <h1 class="text-4xl font-extrabold leading-none tracking-tight text-black dark:text-white">Account Settings</h1>
+        <a href="{% url 'delete-profile' %}"
+           class="bg-red-500 text-white mr-2 px-3 py-2 text-lg rounded-md hover:bg-red-600 transition-all duration-300">
+            Delete Account
+        </a>
+    </div>
+
+    <!-- User info preview -->
+    <div class="user-info-preview">
+        <div class="avatar">
+            {% if user.first_name %}
+                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+            {% else %}
+                {{ user.username|first|upper }}
+            {% endif %}
+        </div>
+        <div class="info">
+            <div class="name">
+                {% if user.first_name %}
+                    {{ user.first_name }} {{ user.last_name }}
+                {% else %}
+                    {{ user.username }}
+                {% endif %}
+            </div>
+            <div class="email">{{ user.email }}</div>
+        </div>
+        <div class="status">
+            <div class="status-indicator active">
+                <span class="status-dot"></span>
+                <span class="status-text">Active</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-6 dark:bg-gray-800">
+        <form action="{% url 'profile' %}" method="post" id="profileForm">
+            {% csrf_token %}
+            <div class="mb-4 flex gap-2">
+                <div class="w-[50%]">
+                    <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span class="mr-2">👤</span> First Name
+                    </label>
+                    <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                           placeholder="Enter first name" />
+                </div>
+                <div class="w-[50%]">
+                    <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span class="mr-2">👤</span> Last Name
+                    </label>
+                    <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                           placeholder="Enter last name" />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <span class="mr-2">🏷️</span> Username
+                </label>
+                <input required type="text" disabled name="username" id="username" value="{{ user.username }}"
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                       placeholder="Username" />
+                <div class="text-xs text-gray-500 mt-1">Username cannot be changed</div>
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <span class="mr-2">📧</span> Email
+                </label>
+                <input required type="text" disabled name="email" id="email" value="{{ user.email }}"
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                       placeholder="Email address" />
+                <div class="text-xs text-gray-500 mt-1">Contact support to change email</div>
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <span class="mr-2">🔐</span> New Password
+                </label>
+                <input type="password" name="password" id="password"
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                       placeholder="Enter new password (optional)" />
+                <div class="password-strength" id="passwordStrength"></div>
+                <div class="text-xs text-gray-500 mt-1">Leave blank to keep current password</div>
+            </div>
+           
+            <input type="submit" value="Save Changes"
+                   class="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300" />
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('profileForm');
+        const submitBtn = form.querySelector('input[type="submit"]');
+        const passwordInput = document.getElementById('password');
+        const passwordStrength = document.getElementById('passwordStrength');
+        
+        // Password strength indicator
+        if (passwordInput && passwordStrength) {
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                if (password.length >= 8) strength++;
+                if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+                if (password.match(/\d/)) strength++;
+                if (password.match(/[^a-zA-Z\d]/)) strength++;
+                
+                const width = (strength / 4) * 100;
+                passwordStrength.style.width = width + '%';
+                
+                let color;
+                if (strength === 0) color = '#ef4444';
+                else if (strength <= 2) color = '#f59e0b';
+                else color = '#22c55e';
+                
+                passwordStrength.style.background = `linear-gradient(90deg, ${color}, ${color})`;
+            });
+        }
+        
+        // Form submission animation
+        form.addEventListener('submit', function(e) {
+            submitBtn.classList.add('loading-submit');
+            submitBtn.value = '';
+            submitBtn.disabled = true;
+            
+            // Add success animation after delay (for demo)
+            setTimeout(() => {
+                if (submitBtn.disabled) {
+                    submitBtn.classList.remove('loading-submit');
+                    submitBtn.value = 'Saved! ✅';
+                    submitBtn.classList.add('saved-success');
+                    submitBtn.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+                    
+                    // Reset after 2 seconds
+                    setTimeout(() => {
+                        submitBtn.classList.remove('saved-success');
+                        submitBtn.value = 'Save Changes';
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)';
+                    }, 2000);
+                }
+            }, 1500);
+        });
+        
+        // Delete account button warning
+        const deleteBtn = document.querySelector('a.bg-red-500');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function(e) {
+                if (!confirm('Are you sure you want to delete your account? This action cannot be undone!')) {
+                    e.preventDefault();
+                }
+            });
+        }
+        
+        // Input field focus effects
+        const inputs = form.querySelectorAll('input[type="text"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('input-focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('input-focused');
+            });
+            
+            // Add character counter for password
+            if (input.type === 'password') {
+                const counter = document.createElement('div');
+                counter.className = 'text-xs text-gray-500 mt-1 text-right';
+                counter.textContent = '0/8';
+                input.parentElement.appendChild(counter);
+                
+                input.addEventListener('input', function() {
+                    counter.textContent = `${this.value.length}/8`;
+                    counter.style.color = this.value.length >= 8 ? '#22c55e' : '#ef4444';
+                });
+            }
+        });
+        
+        // Add ripple effect to buttons
+        const buttons = [submitBtn, deleteBtn];
+        buttons.forEach(button => {
+            if (button) {
+                button.addEventListener('click', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const ripple = document.createElement('span');
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        border-radius: 50%;
+                        background: rgba(255, 255, 255, 0.4);
+                        transform: scale(0);
+                        animation: ripple 0.6s linear;
+                        width: ${size}px;
+                        height: ${size}px;
+                        top: ${y}px;
+                        left: ${x}px;
+                        pointer-events: none;
+                    `;
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            }
+        });
+        
+        // Add ripple animation to CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+            
+            .status-indicator {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.25rem 0.75rem;
+                background: rgba(34, 197, 94, 0.1);
+                border-radius: 9999px;
+            }
+            
+            .status-dot {
+                width: 8px;
+                height: 8px;
+                background: #22c55e;
+                border-radius: 50%;
+                animation: statusPulse 2s ease-in-out infinite;
+            }
+            
+            @keyframes statusPulse {
+                0%, 100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.5;
+                }
+            }
+            
+            .status-text {
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: #16a34a;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Add auto-save indicator
+        const autoSaveIndicator = document.createElement('div');
+        autoSaveIndicator.className = 'auto-save-indicator fixed bottom-4 right-4 bg-green-500 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 transition-opacity duration-300';
+        autoSaveIndicator.textContent = 'Auto-saving...';
+        document.body.appendChild(autoSaveIndicator);
+        
+        // Auto-save simulation
+        let saveTimer;
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                clearTimeout(saveTimer);
+                
+                autoSaveIndicator.style.opacity = '1';
+                autoSaveIndicator.textContent = 'Saving...';
+                
+                saveTimer = setTimeout(() => {
+                    autoSaveIndicator.textContent = 'Saved!';
+                    setTimeout(() => {
+                        autoSaveIndicator.style.opacity = '0';
+                    }, 1000);
+                }, 1500);
+            });
+        });
+    });
+</script>
+
+{% endblock %}

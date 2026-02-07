@@ -1,0 +1,847 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* Container animations */
+    .container.mx-auto.mt-8 {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Breadcrumb animations */
+    nav.flex.mb-4.text-2xl.mx-4 {
+        animation: slideInLeft 0.6s ease-out;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Breadcrumb link animation */
+    a.text-blue-600 {
+        position: relative;
+        transition: all 0.3s ease;
+        display: inline-block;
+        font-weight: 600;
+    }
+
+    a.text-blue-600:hover {
+        transform: translateX(8px);
+        color: #1d4ed8;
+    }
+
+    a.text-blue-600::after {
+        content: '💸';
+        position: absolute;
+        right: -30px;
+        opacity: 0;
+        transition: all 0.3s ease;
+        font-size: 1.5rem;
+    }
+
+    a.text-blue-600:hover::after {
+        opacity: 1;
+        right: -35px;
+        animation: moneyFloat 1s ease-in-out infinite;
+    }
+
+    @keyframes moneyFloat {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-5px) rotate(10deg);
+        }
+    }
+
+    /* Form card animation */
+    .bg-white.shadow-md.rounded-lg.p-6 {
+        animation: cardAppear 0.6s ease-out 0.2s both;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(229, 231, 235, 0.8);
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.08),
+            0 0 0 1px rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dark .bg-white.shadow-md.rounded-lg.p-6 {
+        background: rgba(17, 24, 39, 0.95);
+        border-color: rgba(55, 65, 81, 0.8);
+    }
+
+    .bg-white.shadow-md.rounded-lg.p-6::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(239, 68, 68, 0.1),
+            transparent
+        );
+        animation: cardShine 3s infinite;
+    }
+
+    @keyframes cardAppear {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    @keyframes cardShine {
+        0% {
+            left: -100%;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+
+    /* Form group animations */
+    .mb-4 {
+        animation: formFieldSlide 0.5s ease-out;
+        animation-fill-mode: both;
+        position: relative;
+    }
+
+    @keyframes formFieldSlide {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Stagger form groups */
+    .mb-4:nth-child(1) {
+        animation-delay: 0.3s;
+    }
+
+    .mb-4:nth-child(2) {
+        animation-delay: 0.4s;
+    }
+
+    .mb-4:nth-child(3) {
+        animation-delay: 0.5s;
+    }
+
+    .mb-4:nth-child(4) {
+        animation-delay: 0.6s;
+    }
+
+    /* Label animations */
+    label.block.text-sm.font-medium.text-gray-700 {
+        animation: labelReveal 0.4s ease-out;
+        animation-fill-mode: both;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: #374151;
+        letter-spacing: 0.5px;
+    }
+
+    .dark label.block.text-sm.font-medium.text-gray-700 {
+        color: #d1d5db;
+    }
+
+    label.block.text-sm.font-medium.text-gray-700::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border-radius: 50%;
+        display: inline-block;
+        animation: dotPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes labelReveal {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes dotPulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.5);
+            opacity: 0.5;
+        }
+    }
+
+    /* Input field animations */
+    input[type="text"], input[type="date"], select {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        border-width: 2px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        font-size: 0.875rem;
+        padding: 0.75rem 1rem !important;
+    }
+
+    .dark input[type="text"], .dark input[type="date"], .dark select {
+        background: rgba(31, 41, 55, 0.9) !important;
+        border-color: #4b5563 !important;
+        color: white;
+    }
+
+    input[type="text"]:hover, input[type="date"]:hover, select:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 8px 15px rgba(239, 68, 68, 0.15),
+            0 0 0 2px rgba(239, 68, 68, 0.1);
+        border-color: #ef4444 !important;
+    }
+
+    input[type="text"]:focus, input[type="date"]:focus, select:focus {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 12px 25px rgba(239, 68, 68, 0.25),
+            0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+        animation: expenseInputFocus 2s infinite;
+    }
+
+    @keyframes expenseInputFocus {
+        0%, 100% {
+            box-shadow: 
+                0 12px 25px rgba(239, 68, 68, 0.25),
+                0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+        50% {
+            box-shadow: 
+                0 12px 30px rgba(239, 68, 68, 0.35),
+                0 0 0 3px rgba(239, 68, 68, 0.3);
+        }
+    }
+
+    /* Select dropdown styling */
+    select {
+        cursor: pointer;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1rem;
+        padding-right: 3rem !important;
+        appearance: none;
+    }
+
+    /* Category dropdown special styling */
+    #category {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border-color: #fecaca !important;
+    }
+
+    .dark #category {
+        background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+    }
+
+    /* Submit button animation */
+    input[type="submit"] {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background-size: 200% 200%;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        border: none;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+        padding: 0.75rem 2.5rem;
+        font-size: 1rem;
+        animation: expenseButtonPulse 3s infinite;
+        margin-top: 1rem;
+        cursor: pointer;
+    }
+
+    @keyframes expenseButtonPulse {
+        0%, 100% {
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+        }
+        50% {
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+    }
+
+    input[type="submit"]:hover {
+        background-position: right center;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 
+            0 15px 30px rgba(239, 68, 68, 0.4),
+            0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+    }
+
+    input[type="submit"]:active {
+        transform: translateY(-1px) scale(0.98);
+    }
+
+    input[type="submit"]::before {
+        content: '💸';
+        position: absolute;
+        left: -25px;
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    input[type="submit"]:hover::before {
+        left: 20px;
+        opacity: 1;
+    }
+
+    input[type="submit"]::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    input[type="submit"]:active::after {
+        width: 300px;
+        height: 300px;
+    }
+
+    /* Amount input special styling */
+    #amount {
+        position: relative;
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
+        font-weight: 600;
+        font-size: 1.125rem;
+    }
+
+    .dark #amount {
+        background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%) !important;
+    }
+
+    #amount::before {
+        content: '💰';
+        position: absolute;
+        right: 1rem;
+        opacity: 0.3;
+        transition: all 0.3s ease;
+    }
+
+    #amount:focus::before {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+
+    /* Expense visualizer */
+    .expense-visualizer {
+        height: 4px;
+        background: linear-gradient(90deg, #ef4444, #dc2626, #ef4444);
+        background-size: 200% 100%;
+        animation: expenseFlow 3s linear infinite;
+        border-radius: 2px;
+        margin-bottom: 1.5rem;
+        opacity: 0.7;
+    }
+
+    @keyframes expenseFlow {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    /* Category icons */
+    .category-option {
+        position: relative;
+        padding-left: 2rem !important;
+    }
+
+    .category-option::before {
+        content: '';
+        position: absolute;
+        left: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1rem;
+        height: 1rem;
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.5;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        nav.flex.mb-4.text-2xl.mx-4 {
+            font-size: 1.25rem;
+            margin: 0 1rem;
+        }
+        
+        .bg-white.shadow-md.rounded-lg.p-6 {
+            margin: 0 1rem;
+            padding: 1.5rem !important;
+        }
+        
+        input[type="submit"]:hover {
+            transform: translateY(-2px);
+        }
+        
+        a.text-blue-600:hover {
+            transform: translateX(4px);
+        }
+        
+        a.text-blue-600::after {
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .container.mx-auto.mt-8 {
+            padding: 0 0.5rem;
+        }
+        
+        input[type="submit"]::before,
+        #amount::before {
+            display: none;
+        }
+        
+        label.block.text-sm.font-medium.text-gray-700 {
+            font-size: 0.875rem;
+        }
+    }
+
+    /* Loading animation */
+    .loading-expense {
+        position: relative;
+        color: transparent !important;
+    }
+
+    .loading-expense::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
+
+    /* Success animation */
+    .expense-added {
+        animation: expenseSuccess 2s ease-in-out infinite;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+    }
+
+    @keyframes expenseSuccess {
+        0%, 100% {
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+        }
+        50% {
+            box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+        }
+    }
+
+    /* Date picker enhancement */
+    #expense_date {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+    }
+
+    .dark #expense_date {
+        background: linear-gradient(135deg, #0c4a6e 0%, #075985 100%) !important;
+    }
+
+    #expense_date::-webkit-calendar-picker-indicator {
+        filter: invert(0.5);
+        cursor: pointer;
+        transition: filter 0.3s ease;
+    }
+
+    .dark #expense_date::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+
+    #expense_date::-webkit-calendar-picker-indicator:hover {
+        filter: invert(0.3);
+    }
+
+    /* Form validation */
+    .error-message {
+        animation: shakeError 0.5s ease-in-out;
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    @keyframes shakeError {
+        0%, 100% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-5px);
+        }
+        75% {
+            transform: translateX(5px);
+        }
+    }
+</style>
+
+<div class="container mx-auto mt-8">
+    <nav class="flex mb-4 text-2xl mx-4" aria-label="breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="{% url 'expenses' %}" class="text-blue-600 hover:text-blue-800 transition-all duration-300">
+                    Expenses
+                </a>
+            </li>
+            <li aria-current="page">
+                <span class="text-gray-500">/ Add Expense</span>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Expense flow visualizer -->
+    <div class="expense-visualizer mx-4 mb-6"></div>
+
+    <div class="bg-white shadow-md rounded-lg p-6 dark:bg-gray-800">
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <span class="text-red-500">💸</span> Track New Expense
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Record your spending to keep track of your finances
+            </p>
+        </div>
+
+        <form action="{% url 'add-expense' %}" method="post" id="expenseForm">
+            {% include 'components/messages.html' %}
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    💰 Amount
+                </label>
+                <input required type="text" name="amount" id="amount" value="{{ values.amount }}"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    placeholder="0.00"
+                    inputmode="decimal"
+                    pattern="[0-9]*\.?[0-9]*" />
+                <div class="text-xs text-gray-500 mt-1">Enter the amount spent</div>
+            </div>
+            
+            <div class="mb-4">
+                <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    📝 Description
+                </label>
+                <input required type="text" name="description" id="description" value="{{ values.description }}"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    placeholder="What did you spend on?" />
+                <div class="text-xs text-gray-500 mt-1">Brief description of the expense</div>
+            </div>
+            
+            <div class="mb-4">
+                <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    🏷️ Category
+                </label>
+                <select required name="category" id="category"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="" disabled selected>Select a category</option>
+                    {% for category in categories %}
+                    <option value="{{ category.name }}" class="category-option">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="text-xs text-gray-500 mt-1">Choose the expense category</div>
+            </div>
+            
+            <div class="mb-6">
+                <label for="expense_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    📅 Date of Expense
+                </label>
+                <input required type="date" name="date" id="expense_date" value="{{ values.date }}"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                <div class="text-xs text-gray-500 mt-1">When did this expense occur?</div>
+            </div>
+            
+            <div class="flex gap-3">
+                <input type="submit" value="Add Expense"
+                    class="bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition-all duration-300 flex-1" />
+                
+                <a href="{% url 'expenses' %}"
+                    class="bg-gray-200 text-gray-700 px-4 py-2 rounded shadow hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50 transition-all duration-300 flex items-center justify-center gap-2">
+                    <span>Cancel</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('expenseForm');
+        const submitBtn = form.querySelector('input[type="submit"]');
+        const amountInput = document.getElementById('amount');
+        const categorySelect = document.getElementById('category');
+        const dateInput = document.getElementById('expense_date');
+        
+        // Format amount input
+        if (amountInput) {
+            amountInput.addEventListener('input', function() {
+                // Format as currency
+                let value = this.value.replace(/[^\d.]/g, '');
+                if (value.includes('.')) {
+                    const parts = value.split('.');
+                    value = parts[0] + '.' + (parts[1] || '').substring(0, 2);
+                }
+                this.value = value;
+                
+                // Add currency symbol visual feedback
+                const parent = this.parentElement;
+                const currencyDisplay = parent.querySelector('.currency-display') || 
+                    document.createElement('div');
+                
+                if (!parent.querySelector('.currency-display')) {
+                    currencyDisplay.className = 'currency-display absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-bold';
+                    currencyDisplay.textContent = '$';
+                    parent.style.position = 'relative';
+                    parent.appendChild(currencyDisplay);
+                }
+            });
+            
+            amountInput.addEventListener('focus', function() {
+                this.parentElement.querySelector('.currency-display').style.color = '#ef4444';
+            });
+            
+            amountInput.addEventListener('blur', function() {
+                this.parentElement.querySelector('.currency-display').style.color = '#6b7280';
+            });
+        }
+        
+        // Set today's date as default if no date is set
+        if (dateInput && !dateInput.value) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+        }
+        
+        // Form submission animation
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            // Amount validation
+            if (!amountInput.value || parseFloat(amountInput.value) <= 0) {
+                showError(amountInput, 'Please enter a valid amount');
+                isValid = false;
+            }
+            
+            // Description validation
+            const descriptionInput = document.getElementById('description');
+            if (!descriptionInput.value.trim()) {
+                showError(descriptionInput, 'Please enter a description');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.classList.add('loading-expense');
+            submitBtn.value = '';
+            submitBtn.disabled = true;
+            
+            // Animate expense flow
+            const visualizer = document.querySelector('.expense-visualizer');
+            if (visualizer) {
+                visualizer.style.animation = 'expenseFlow 0.5s linear infinite';
+                visualizer.style.opacity = '1';
+            }
+            
+            // Simulate processing
+            setTimeout(() => {
+                submitBtn.classList.remove('loading-expense');
+                submitBtn.value = 'Expense Added! 💸';
+                submitBtn.classList.add('expense-added');
+                
+                // Reset after animation
+                setTimeout(() => {
+                    if (visualizer) {
+                        visualizer.style.opacity = '0.7';
+                        visualizer.style.animation = 'expenseFlow 3s linear infinite';
+                    }
+                    form.submit();
+                }, 1500);
+            }, 1500);
+        });
+        
+        function showError(element, message) {
+            // Create error message element
+            let errorDiv = element.parentElement.querySelector('.error-message');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message text-sm text-red-500 mt-1 flex items-center gap-2';
+                element.parentElement.appendChild(errorDiv);
+            }
+            
+            errorDiv.innerHTML = `
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" 
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                ${message}
+            `;
+            
+            // Add shake animation to input
+            element.style.animation = 'shakeError 0.5s ease-in-out';
+            element.style.borderColor = '#ef4444';
+            
+            setTimeout(() => {
+                element.style.animation = '';
+            }, 500);
+            
+            // Focus the input
+            element.focus();
+        }
+        
+        // Clear error on input
+        const inputs = form.querySelectorAll('input[required], select[required]');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const errorDiv = this.parentElement.querySelector('.error-message');
+                if (errorDiv) {
+                    errorDiv.remove();
+                }
+                this.style.borderColor = '';
+            });
+        });
+        
+        // Add ripple effect to buttons
+        const buttons = form.querySelectorAll('input[type="submit"], a');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.4);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    width: ${size}px;
+                    height: ${size}px;
+                    top: ${y}px;
+                    left: ${x}px;
+                    pointer-events: none;
+                `;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+        
+        // Add ripple animation to CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Add category icons
+        const categoryOptions = categorySelect.querySelectorAll('option');
+        const categoryIcons = {
+            'Food': '🍕',
+            'Transport': '🚗',
+            'Entertainment': '🎬',
+            'Shopping': '🛍️',
+            'Bills': '📱',
+            'Healthcare': '🏥',
+            'Education': '📚',
+            'Travel': '✈️',
+            'Other': '📦'
+        };
+        
+        categoryOptions.forEach(option => {
+            const icon = categoryIcons[option.textContent] || '💸';
+            option.textContent = `${icon} ${option.textContent}`;
+        });
+        
+        // Auto-focus amount input
+        setTimeout(() => {
+            amountInput.focus();
+        }, 500);
+        
+        // Add expense sound effect (optional)
+        const playExpenseSound = () => {
+            // You can add a sound effect here if desired
+            // Example: new Audio('/static/sounds/cash-register.mp3').play();
+        };
+        
+        // Play sound on submit
+        submitBtn.addEventListener('click', playExpenseSound);
+    });
+</script>
+
+{% endblock %}

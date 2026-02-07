@@ -1,0 +1,582 @@
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+    <div id="alert-{{ forloop.counter }}" 
+         class="alert-message alert-{{ message.tags }}"
+         role="alert"
+         data-index="{{ forloop.counter }}">
+        <div class="alert-content">
+            <div class="alert-icon">
+                {% if message.tags == 'success' %}
+                <svg class="success-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" 
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {% elif message.tags == 'error' %}
+                <svg class="error-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" 
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {% elif message.tags == 'warning' %}
+                <svg class="warning-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 9V11M12 15H12.01M10.29 3.86L1.82 18C1.645 18.302 1.552 18.649 1.552 19C1.552 19.351 1.645 19.698 1.82 20C2.01 20.308 2.262 20.56 2.57 20.75C2.879 20.94 3.228 21.053 3.59 21.08C3.95 21.106 4.31 21.047 4.64 20.91C4.97 20.77 5.26 20.56 5.48 20.29L12 11L18.52 20.29C18.74 20.56 19.03 20.77 19.36 20.91C19.69 21.047 20.05 21.106 20.41 21.08C20.77 21.053 21.12 20.94 21.43 20.75C21.74 20.56 21.99 20.308 22.18 20C22.355 19.698 22.448 19.351 22.448 19C22.448 18.649 22.355 18.302 22.18 18L13.71 3.86C13.53 3.541 13.28 3.28 12.98 3.1C12.68 2.92 12.34 2.82 12 2.82C11.66 2.82 11.32 2.92 11.02 3.1C10.72 3.28 10.47 3.541 10.29 3.86Z" 
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {% elif message.tags == 'info' %}
+                <svg class="info-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 16V12M12 8H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" 
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {% else %}
+                <svg class="info-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 16H12V12H11M12 8H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" 
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {% endif %}
+            </div>
+            <div class="alert-body">
+                <div class="alert-title">
+                    {{ message.tags|title }}
+                </div>
+                <div class="alert-text">
+                    {{ message }}
+                </div>
+            </div>
+            <button type="button"
+                class="alert-close-btn"
+                data-dismiss-target="#alert-{{ forloop.counter }}"
+                aria-label="Close">
+                <svg class="close-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6L18 18" 
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        <div class="alert-progress"></div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<style>
+    /* Messages container */
+    .messages-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        max-width: 400px;
+        width: 90%;
+    }
+    
+    /* Alert message base styles */
+    .alert-message {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        animation-fill-mode: both;
+        box-shadow: 
+            0 10px 25px rgba(0, 0, 0, 0.1),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transform-origin: right center;
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    
+    /* Stagger animations */
+    .alert-message[data-index="1"] { animation-delay: 0.1s; }
+    .alert-message[data-index="2"] { animation-delay: 0.2s; }
+    .alert-message[data-index="3"] { animation-delay: 0.3s; }
+    .alert-message[data-index="4"] { animation-delay: 0.4s; }
+    .alert-message[data-index="5"] { animation-delay: 0.5s; }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(100px) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+    }
+    
+    @keyframes slideOutRight {
+        to {
+            opacity: 0;
+            transform: translateX(100px) scale(0.9);
+        }
+    }
+    
+    .alert-message.exiting {
+        animation: slideOutRight 0.3s ease forwards;
+    }
+    
+    /* Alert content */
+    .alert-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1.25rem;
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Alert icons */
+    .alert-icon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        animation: iconPulse 2s ease-in-out infinite;
+    }
+    
+    .success-icon, .error-icon, .warning-icon, .info-icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    @keyframes iconPulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+    
+    /* Alert body */
+    .alert-body {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .alert-title {
+        font-weight: 700;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .alert-text {
+        font-size: 0.875rem;
+        line-height: 1.4;
+        opacity: 0.9;
+    }
+    
+    /* Close button */
+    .alert-close-btn {
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        opacity: 0.7;
+    }
+    
+    .alert-close-btn:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .alert-close-btn:active {
+        transform: rotate(90deg) scale(0.9);
+    }
+    
+    .close-icon {
+        width: 16px;
+        height: 16px;
+    }
+    
+    /* Progress bar */
+    .alert-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        transform-origin: left;
+        animation: progressBar 5s linear forwards;
+        border-radius: 0 0 16px 16px;
+    }
+    
+    @keyframes progressBar {
+        from {
+            transform: scaleX(1);
+        }
+        to {
+            transform: scaleX(0);
+        }
+    }
+    
+    /* Success message */
+    .alert-success {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%);
+        color: #16a34a;
+        border-color: rgba(34, 197, 94, 0.3);
+    }
+    
+    .alert-success .alert-icon {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+    
+    .alert-success .alert-progress {
+        background: linear-gradient(90deg, #22c55e, #16a34a);
+    }
+    
+    /* Error message */
+    .alert-error {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+        color: #dc2626;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+    
+    .alert-error .alert-icon {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        animation: iconShake 0.5s ease-in-out;
+    }
+    
+    @keyframes iconShake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-3px);
+        }
+        75% {
+            transform: translateX(3px);
+        }
+    }
+    
+    .alert-error .alert-progress {
+        background: linear-gradient(90deg, #ef4444, #dc2626);
+    }
+    
+    /* Warning message */
+    .alert-warning {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+        color: #d97706;
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+    
+    .alert-warning .alert-icon {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+        animation: iconPulse 1s ease-in-out infinite;
+    }
+    
+    .alert-warning .alert-progress {
+        background: linear-gradient(90deg, #f59e0b, #d97706);
+    }
+    
+    /* Info message */
+    .alert-info {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%);
+        color: #2563eb;
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .alert-info .alert-icon {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    
+    .alert-info .alert-progress {
+        background: linear-gradient(90deg, #3b82f6, #2563eb);
+    }
+    
+    /* Default message */
+    .alert-default {
+        background: linear-gradient(135deg, rgba(107, 114, 128, 0.15) 0%, rgba(107, 114, 128, 0.05) 100%);
+        color: #4b5563;
+        border-color: rgba(107, 114, 128, 0.3);
+    }
+    
+    .alert-default .alert-icon {
+        background: linear-gradient(135deg, #6b7280, #4b5563);
+        color: white;
+        box-shadow: 0 0 20px rgba(107, 114, 128, 0.3);
+    }
+    
+    .alert-default .alert-progress {
+        background: linear-gradient(90deg, #6b7280, #4b5563);
+    }
+    
+    /* Hover effects */
+    .alert-message:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 15px 35px rgba(0, 0, 0, 0.15),
+            0 0 0 1px rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .alert-message:hover .alert-progress {
+        animation-play-state: paused;
+    }
+    
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+        .alert-message {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%);
+        }
+        
+        .alert-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
+        }
+        
+        .alert-warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+        }
+        
+        .alert-info {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+        }
+        
+        .alert-default {
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.2) 0%, rgba(107, 114, 128, 0.1) 100%);
+        }
+    }
+    
+    /* Responsive */
+    @media (max-width: 640px) {
+        .messages-container {
+            left: 1rem;
+            right: 1rem;
+            width: auto;
+        }
+        
+        .alert-message {
+            animation: slideInUp 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .alert-message.exiting {
+            animation: slideOutDown 0.3s ease forwards;
+        }
+        
+        @keyframes slideOutDown {
+            to {
+                opacity: 0;
+                transform: translateY(100px) scale(0.9);
+            }
+        }
+    }
+    
+    /* Accessibility */
+    .alert-message:focus-within {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+    }
+    
+    .alert-close-btn:focus {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const alerts = document.querySelectorAll('.alert-message');
+        
+        alerts.forEach(alert => {
+            const closeBtn = alert.querySelector('.alert-close-btn');
+            const progressBar = alert.querySelector('.alert-progress');
+            
+            // Auto-remove after 5 seconds
+            const autoRemoveTimer = setTimeout(() => {
+                dismissAlert(alert);
+            }, 5000);
+            
+            // Close button click
+            closeBtn.addEventListener('click', function () {
+                clearTimeout(autoRemoveTimer);
+                dismissAlert(alert);
+            });
+            
+            // Pause progress on hover
+            alert.addEventListener('mouseenter', function () {
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'paused';
+                }
+                clearTimeout(autoRemoveTimer);
+            });
+            
+            // Resume progress on mouse leave
+            alert.addEventListener('mouseleave', function () {
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'running';
+                }
+                
+                // Restart auto-remove timer
+                setTimeout(() => {
+                    dismissAlert(alert);
+                }, 5000);
+            });
+            
+            // Keyboard navigation
+            closeBtn.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    clearTimeout(autoRemoveTimer);
+                    dismissAlert(alert);
+                }
+            });
+            
+            // Focus trap for accessibility
+            alert.addEventListener('focusin', function () {
+                clearTimeout(autoRemoveTimer);
+            });
+            
+            // Add entrance animation delay based on index
+            const index = alert.getAttribute('data-index');
+            alert.style.animationDelay = `${(index - 1) * 0.1}s`;
+            
+            // Add bounce effect on appear
+            setTimeout(() => {
+                alert.style.animation = 'bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            }, (index - 1) * 100);
+        });
+        
+        function dismissAlert(alert) {
+            alert.classList.add('exiting');
+            
+            // Remove from DOM after animation
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+                
+                // Check if container is empty and remove it
+                const container = document.querySelector('.messages-container');
+                if (container && container.children.length === 0) {
+                    container.remove();
+                }
+            }, 300);
+        }
+        
+        // Add bounce animation to CSS
+        const bounceStyle = document.createElement('style');
+        bounceStyle.textContent = `
+            @keyframes bounceIn {
+                0% {
+                    opacity: 0;
+                    transform: translateX(100px) scale(0.3);
+                }
+                50% {
+                    opacity: 1;
+                    transform: translateX(-10px) scale(1.05);
+                }
+                70% {
+                    transform: translateX(5px) scale(0.95);
+                }
+                100% {
+                    transform: translateX(0) scale(1);
+                }
+            }
+            
+            @media (max-width: 640px) {
+                @keyframes bounceIn {
+                    0% {
+                        opacity: 0;
+                        transform: translateY(100px) scale(0.3);
+                    }
+                    50% {
+                        opacity: 1;
+                        transform: translateY(-10px) scale(1.05);
+                    }
+                    70% {
+                        transform: translateY(5px) scale(0.95);
+                    }
+                    100% {
+                        transform: translateY(0) scale(1);
+                    }
+                }
+            }
+        `;
+        document.head.appendChild(bounceStyle);
+        
+        // Add sound effect for error messages (optional)
+        const errorAlerts = document.querySelectorAll('.alert-error');
+        errorAlerts.forEach(alert => {
+            setTimeout(() => {
+                alert.classList.add('error-shake');
+                setTimeout(() => {
+                    alert.classList.remove('error-shake');
+                }, 500);
+            }, 100);
+        });
+        
+        // Add shake animation for errors
+        const shakeStyle = document.createElement('style');
+        shakeStyle.textContent = `
+            .error-shake {
+                animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            }
+            
+            @keyframes shake {
+                10%, 90% {
+                    transform: translateX(-1px);
+                }
+                20%, 80% {
+                    transform: translateX(2px);
+                }
+                30%, 50%, 70% {
+                    transform: translateX(-3px);
+                }
+                40%, 60% {
+                    transform: translateX(3px);
+                }
+            }
+        `;
+        document.head.appendChild(shakeStyle);
+        
+        // Add click sound for close button (optional)
+        const closeButtons = document.querySelectorAll('.alert-close-btn');
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', function () {
+                // You can add a subtle sound effect here if desired
+                // Example: new Audio('/static/sounds/click.mp3').play();
+            });
+        });
+    });
+</script>

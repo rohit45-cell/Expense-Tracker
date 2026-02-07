@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Animation Styles */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+        }
+        70% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+        }
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        }
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    @keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    /* Main container animation */
+    .container.mx-auto.mt-8 {
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    /* Title styling with animation */
+    .mb-4.text-2xl.font-extrabold {
+        animation: slideInLeft 0.6s ease-out 0.2s both;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: slideInLeft 0.6s ease-out 0.2s both, gradientShift 3s ease infinite;
+        position: relative;
+    }
+
+    .mb-4.text-2xl.font-extrabold::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: expandLine 1s ease-out 0.8s forwards;
+    }
+
+    @keyframes expandLine {
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    /* Select dropdown styling */
+    #options {
+        animation: slideInRight 0.6s ease-out 0.4s both;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        background: linear-gradient(white, white) padding-box,
+                    linear-gradient(90deg, #3b82f6, #8b5cf6) border-box;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    #options:hover {
+        animation: pulse 2s infinite;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    #options:focus {
+        border-color: #3b82f6;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Chart containers */
+    #barChart, #douChart {
+        animation: chartAppear 0.8s ease-out 0.6s both;
+        transition: transform 0.3s ease;
+    }
+
+    @keyframes chartAppear {
+        from {
+            opacity: 0;
+            transform: scale(0.9) rotateX(10deg);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) rotateX(0);
+        }
+    }
+
+    .w-auto.md\:w-\[50\%\] {
+        perspective: 1000px;
+    }
+
+    .w-auto.md\:w-\[50\%\]:hover canvas {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Chart hover effects */
+    #barChart:hover, #douChart:hover {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .flex.flex-wrap.gap-5.md\:gap-0 {
+            gap: 2rem !important;
+        }
+        
+        .w-auto.md\:w-\[50\%\] {
+            width: 100% !important;
+            max-width: 500px;
+        }
+    }
+
+    /* Dark mode adjustments */
+    @media (prefers-color-scheme: dark) {
+        #options {
+            background: linear-gradient(#1f2937, #1f2937) padding-box,
+                        linear-gradient(90deg, #3b82f6, #8b5cf6) border-box;
+        }
+        
+        .mb-4.text-2xl.font-extrabold {
+            background: linear-gradient(90deg, #60a5fa, #a78bfa, #60a5fa);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    }
+
+    /* Loading state animation */
+    .chart-loading {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .chart-loading::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+        100% {
+            left: 100%;
+        }
+    }
+
+    /* Add some spacing and visual hierarchy */
+    .flex.flex-wrap.gap-5.md\:gap-0 {
+        min-height: 450px;
+        align-items: stretch;
+    }
+
+    /* Card-like effect for chart containers */
+    .w-auto.md\:w-\[50\%\] {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .dark .w-auto.md\:w-\[50\%\] {
+        background: #1f2937;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Flex container animation */
+    .flex.flex-col.md\:flex-row.items-center {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    /* Smooth transitions */
+    * {
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+</style>
+
+<div class="container mx-auto mt-8">
+    <div class="flex flex-col md:flex-row items-center">
+        <div class="">
+            <h1
+                class="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">
+                Expense Summary</h1>
+        </div>
+
+        <div class="w-[50%] mx-4 md:w-[30%] md:mx-auto">
+            <select id="options"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option selected value="all">All</option>
+                <option value="last_month">Last Month - {{month}}</option>
+                <option value="last_30_days">Last 30 Days</option>
+            </select>
+        </div>
+    </div>
+    <div class="flex flex-wrap gap-5 md:gap-0 justify-center items-center mt-6">
+        <div class="w-auto md:w-[50%]">
+            <canvas id="barChart" class="w-full h-full max-h-[400px]"></canvas>
+        </div>
+        <div class="w-auto md:w-[50%]">
+            <canvas id="douChart" class="w-full h-full max-h-[400px]"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/expenseStats.js' %}"></script>
+
+{% endblock content %}

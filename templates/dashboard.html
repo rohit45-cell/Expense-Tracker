@@ -1,0 +1,728 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+    /* Container animations */
+    .flex.justify-between.py-3 {
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Stat card animations */
+    .px-8.py-2 {
+        position: relative;
+        animation: slideInFromRight 0.6s ease-out;
+        animation-fill-mode: both;
+    }
+    
+    @keyframes slideInFromRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Staggered animations for stat cards */
+    .px-8.py-2:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+    .px-8.py-2:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    .px-8.py-2:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+    .px-8.py-2:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+    
+    /* Stat card hover effects */
+    .px-8.py-2 {
+        background: linear-gradient(145deg, #ffffff, #f0f0f0);
+        border-radius: 16px;
+        padding: 1.5rem !important;
+        margin: 0.5rem;
+        min-width: 200px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(229, 231, 235, 0.8);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .dark .px-8.py-2 {
+        background: linear-gradient(145deg, #1f2937, #111827);
+        border: 1px solid rgba(55, 65, 81, 0.8);
+    }
+    
+    .px-8.py-2:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+        border-color: #3b82f6;
+    }
+    
+    .dark .px-8.py-2:hover {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.2);
+        border-color: #60a5fa;
+    }
+    
+    .px-8.py-2::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+    }
+    
+    .px-8.py-2:hover::before {
+        transform: scaleX(1);
+    }
+    
+    /* Stat card icons */
+    .px-8.py-2::after {
+        content: '';
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 40px;
+        height: 40px;
+        opacity: 0.1;
+        background-size: contain;
+        background-repeat: no-repeat;
+        transition: all 0.3s ease;
+    }
+    
+    .px-8.py-2:nth-child(1)::after {
+        content: '💱';
+        font-size: 1.5rem;
+        opacity: 0.3;
+    }
+    
+    .px-8.py-2:nth-child(2)::after {
+        content: '💰';
+        font-size: 1.5rem;
+        opacity: 0.3;
+    }
+    
+    .px-8.py-2:nth-child(3)::after {
+        content: '📊';
+        font-size: 1.5rem;
+        opacity: 0.3;
+    }
+    
+    .px-8.py-2:nth-child(4)::after {
+        content: '📅';
+        font-size: 1.5rem;
+        opacity: 0.3;
+    }
+    
+    .px-8.py-2:hover::after {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+    
+    /* Main category cards */
+    .bg-green-600, .bg-red-600 {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: scaleIn 0.6s ease-out;
+        animation-fill-mode: both;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bg-green-600 {
+        animation-delay: 0.5s;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    }
+    
+    .bg-red-600 {
+        animation-delay: 0.6s;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    }
+    
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+    
+    .bg-green-600:hover, .bg-red-600:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    }
+    
+    .bg-green-600:hover::before, .bg-red-600:hover::before {
+        transform: translateX(100%);
+    }
+    
+    .bg-green-600::before, .bg-red-600::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: transform 0.8s ease;
+    }
+    
+    /* Category card icons */
+    .bg-green-600 a::before {
+        content: '📈';
+        font-size: 2.5rem;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        opacity: 0.3;
+        transition: all 0.3s ease;
+    }
+    
+    .bg-red-600 a::before {
+        content: '📉';
+        font-size: 2.5rem;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        opacity: 0.3;
+        transition: all 0.3s ease;
+    }
+    
+    .bg-green-600:hover a::before, .bg-red-600:hover a::before {
+        opacity: 0.5;
+        transform: scale(1.2) rotate(10deg);
+    }
+    
+    /* Sub-category cards */
+    .bg-slate-800, .bg-teal-800 {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideInUp 0.6s ease-out;
+        animation-fill-mode: both;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bg-slate-800 {
+        animation-delay: 0.7s;
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    }
+    
+    .bg-teal-800 {
+        animation-delay: 0.8s;
+        background: linear-gradient(135deg, #0f766e 0%, #115e59 100%) !important;
+    }
+    
+    .bg-slate-800:hover, .bg-teal-800:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Text animations */
+    h4.text-lg.text-gray-500.font-thin.uppercase {
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    h4.text-2xl.font-semibold {
+        font-size: 2rem;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        transition: all 0.3s ease;
+    }
+    
+    .px-8.py-2:hover h4.text-2xl.font-semibold {
+        transform: scale(1.05);
+    }
+    
+    /* Category card text */
+    h1.text-xl.font-light {
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+    
+    h1.text-xl.font-light::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.3);
+        transition: width 0.3s ease;
+    }
+    
+    .bg-green-600:hover h1.text-xl.font-light::after,
+    .bg-red-600:hover h1.text-xl.font-light::after,
+    .bg-slate-800:hover h1.text-xl.font-light::after,
+    .bg-teal-800:hover h1.text-xl.font-light::after {
+        width: 80px;
+    }
+    
+    /* Income/Expense amounts */
+    h1.text-2xl.text-green-100.font-semibold,
+    h1.text-2xl.text-red-100.font-semibold,
+    h1.text-2xl.text-green-500.font-semibold,
+    h1.text-2xl.text-red-500.font-semibold {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .bg-green-600:hover h1.text-2xl.text-green-100.font-semibold,
+    .bg-red-600:hover h1.text-2xl.text-red-100.font-semibold {
+        transform: scale(1.1);
+    }
+    
+    /* Flex container improvements */
+    .flex.justify-between.py-3.flex-wrap {
+        gap: 1rem;
+        justify-content: center;
+    }
+    
+    .flex.space-x-0.flex-col.lg\:flex-row.lg\:space-x-2.my-2.px-6 {
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    /* Currency link animation */
+    a[href="{% url 'preference' %}"] {
+        position: relative;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    
+    a[href="{% url 'preference' %}"]:hover {
+        transform: translateX(5px);
+    }
+    
+    a[href="{% url 'preference' %}"]::after {
+        content: '⚙️';
+        position: absolute;
+        right: -25px;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    
+    a[href="{% url 'preference' %}"]:hover::after {
+        opacity: 1;
+        right: -30px;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .px-8.py-2 {
+            min-width: 100%;
+            margin: 0.5rem 0;
+        }
+        
+        .flex.justify-between.py-3.flex-wrap {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        h4.text-2xl.font-semibold {
+            font-size: 1.75rem;
+        }
+        
+        .bg-green-600, .bg-red-600,
+        .bg-slate-800, .bg-teal-800 {
+            min-height: 140px;
+        }
+        
+        h1.text-2xl.text-green-100.font-semibold,
+        h1.text-2xl.text-red-100.font-semibold,
+        h1.text-2xl.text-green-500.font-semibold,
+        h1.text-2xl.text-red-500.font-semibold {
+            font-size: 2rem;
+        }
+        
+        .px-8.py-2:hover {
+            transform: translateY(-4px);
+        }
+        
+        .bg-green-600:hover, .bg-red-600:hover,
+        .bg-slate-800:hover, .bg-teal-800:hover {
+            transform: translateY(-5px);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .px-8.py-2 {
+            padding: 1rem !important;
+        }
+        
+        .px-8.py-2::after {
+            display: none;
+        }
+        
+        h1.text-xl.font-light {
+            font-size: 1rem;
+        }
+        
+        h1.text-2xl.text-green-100.font-semibold,
+        h1.text-2xl.text-red-100.font-semibold,
+        h1.text-2xl.text-green-500.font-semibold,
+        h1.text-2xl.text-red-500.font-semibold {
+            font-size: 1.75rem;
+        }
+    }
+    
+    /* Loading animation */
+    @keyframes shimmer {
+        0% {
+            background-position: -200% center;
+        }
+        100% {
+            background-position: 200% center;
+        }
+    }
+    
+    .loading {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+    }
+    
+    /* Dark mode adjustments */
+    .dark h4.text-lg.text-gray-500.font-thin.uppercase {
+        color: #9ca3af;
+    }
+    
+    .dark .bg-green-600, .dark .bg-red-600,
+    .dark .bg-slate-800, .dark .bg-teal-800 {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dark .bg-green-600:hover, .dark .bg-red-600:hover,
+    .dark .bg-slate-800:hover, .dark .bg-teal-800:hover {
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    }
+</style>
+
+<div class="flex justify-between py-3 flex-wrap">
+    {% if currency %}
+    <div class="px-8 py-2">
+        <h4 class="text-lg text-gray-500 font-thin uppercase">
+            <span class="emoji">💱</span> Currency
+        </h4>
+        <a href="{% url 'preference' %}">
+            <h4 class="text-2xl font-semibold">{{currency}}</h4>
+        </a>
+        <div class="mt-2 text-xs text-gray-400">Click to change</div>
+    </div>
+    {% endif %}
+    <div class="px-8 py-2">
+        <h4 class="text-lg text-gray-500 font-thin uppercase">
+            <span class="emoji">💰</span> Total Balance
+        </h4>
+        <h4 class="text-2xl font-semibold">{{balance}}</h4>
+        <div class="mt-2 text-xs text-gray-400">Overall net worth</div>
+    </div>
+    <div class="px-8 py-2">
+        <h4 class="text-lg text-gray-500 font-thin uppercase">
+            <span class="emoji">📊</span> Last 30 Days
+        </h4>
+        <h4 class="text-2xl font-semibold">{{last_30_days_balance}}</h4>
+        <div class="mt-2 text-xs text-gray-400">Recent monthly performance</div>
+    </div>
+    <div class="px-8 py-2">
+        <h4 class="text-lg text-gray-500 font-thin uppercase">
+            <span class="emoji">📅</span> {{last_month_name}}
+        </h4>
+        <h4 class="text-2xl font-semibold">{{last_month_balance}}</h4>
+        <div class="mt-2 text-xs text-gray-400">Previous month total</div>
+    </div>
+</div>
+
+<div class="flex space-x-0 flex-col lg:flex-row lg:space-x-2 my-2 px-6">
+    <div class="bg-green-600 p-4 border-2 rounded-md shadow-lg w-full text-white text-center">
+        <a href="{% url 'incomes' %}" class="block relative">
+            <h1 class="text-xl font-light">TOTAL INCOME</h1>
+            <h1 class="text-2xl text-green-100 font-semibold my-3">{{total_incomes}}</h1>
+            <div class="text-sm opacity-80 mt-2">Click to view income details</div>
+            <div class="absolute bottom-2 left-2 text-xs opacity-50">
+                📈 Income Streams
+            </div>
+        </a>
+    </div>
+    <div class="bg-red-600 p-4 border-2 rounded-md shadow-lg w-full text-white text-center">
+        <a href="{% url 'expenses' %}" class="block relative">
+            <h1 class="text-xl font-light">TOTAL EXPENSE</h1>
+            <h1 class="text-2xl text-red-100 font-semibold my-3">{{total_expenses}}</h1>
+            <div class="text-sm opacity-80 mt-2">Click to view expense details</div>
+            <div class="absolute bottom-2 left-2 text-xs opacity-50">
+                📉 Spending Analysis
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="flex space-x-0 flex-col lg:flex-row lg:space-x-2 my-2 px-6">
+    <div class="bg-slate-800 p-4 border-2 rounded-md shadow-lg w-full text-white text-center">
+        <h1 class="text-xl font-light">LAST 30 DAYS PERFORMANCE</h1>
+        <div class="flex justify-center gap-6 my-4">
+            <div class="text-center">
+                <div class="text-sm opacity-80">Income</div>
+                <h1 class="text-2xl text-green-500 font-semibold">{{incomes_last_30_days}}</h1>
+            </div>
+            <div class="w-px bg-gray-600"></div>
+            <div class="text-center">
+                <div class="text-sm opacity-80">Expense</div>
+                <h1 class="text-2xl text-red-500 font-semibold">{{expenses_last_30_days}}</h1>
+            </div>
+        </div>
+        <div class="text-xs text-gray-400 mt-2">Daily average tracking</div>
+    </div>
+    <div class="bg-teal-800 p-4 border-2 rounded-md shadow-lg w-full text-white text-center">
+        <h1 class="text-xl font-light uppercase">LAST MONTH - {{last_month_name}}</h1>
+        <div class="flex justify-center gap-6 my-4">
+            <div class="text-center">
+                <div class="text-sm opacity-80">Income</div>
+                <h1 class="text-2xl text-green-500 font-semibold">{{incomes_last_month}}</h1>
+            </div>
+            <div class="w-px bg-gray-600"></div>
+            <div class="text-center">
+                <div class="text-sm opacity-80">Expense</div>
+                <h1 class="text-2xl text-red-500 font-semibold">{{expenses_last_month}}</h1>
+            </div>
+        </div>
+        <div class="text-xs text-gray-400 mt-2">Monthly financial review</div>
+    </div>
+</div>
+
+<footer class="gm-footer">
+  <div class="gm-footer-content">
+
+    <div class="gm-footer-text">
+      <span>Ganesh M ❤️</span>
+      <small>© 2026 All Rights Reserved</small>
+    </div>
+
+    <div class="gm-footer-social">
+      <a href="#" class="gm-social github"><i class="fab fa-github"></i></a>
+      <a href="#" class="gm-social linkedin"><i class="fab fa-linkedin"></i></a>
+      <a href="#" class="gm-social twitter"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="gm-social instagram"><i class="fab fa-instagram"></i></a>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+/* FOOTER BASE */
+.gm-footer {
+  background: linear-gradient(135deg, #020617, #0f172a);
+  padding: 16px 20px;
+  color: #e5e7eb;
+  margin-top: 40px;
+  animation: footerFade 1s ease-in-out;
+}
+
+/* CONTENT */
+.gm-footer-content {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* TEXT */
+.gm-footer-text span {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.gm-footer-text small {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* SOCIAL ICONS */
+.gm-footer-social {
+  display: flex;
+  gap: 14px;
+}
+
+.gm-social {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111827;
+  color: #e5e7eb;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.gm-social:hover {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 8px 25px rgba(59,130,246,0.35);
+}
+
+/* BRAND COLORS */
+.github:hover { background: #000; }
+.linkedin:hover { background: #0a66c2; }
+.twitter:hover { background: #1da1f2; }
+.instagram:hover { background: radial-gradient(circle at 30% 30%, #feda75, #d62976, #962fbf); }
+
+/* MOBILE */
+@media (max-width: 640px) {
+  .gm-footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* ANIMATION */
+@keyframes footerFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add hover effect to all stat cards
+        const statCards = document.querySelectorAll('.px-8.py-2');
+        statCards.forEach((card, index) => {
+            // Add data attribute for animation delay
+            card.style.setProperty('--delay', `${index * 100}ms`);
+            
+            // Add click ripple effect
+            card.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') return;
+                
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(59, 130, 246, 0.3);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    width: ${size}px;
+                    height: ${size}px;
+                    top: ${y}px;
+                    left: ${x}px;
+                    pointer-events: none;
+                `;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+        
+        // Add CSS for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Animate numbers on hover
+        const incomeAmount = document.querySelector('.bg-green-600 h1.text-2xl');
+        const expenseAmount = document.querySelector('.bg-red-600 h1.text-2xl');
+        
+        if (incomeAmount) {
+            incomeAmount.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            incomeAmount.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        }
+        
+        if (expenseAmount) {
+            expenseAmount.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            expenseAmount.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        }
+        
+        // Add loading animation to data elements
+        const dataElements = document.querySelectorAll('h4.text-2xl, h1.text-2xl');
+        dataElements.forEach(el => {
+            if (el.textContent.trim() === '' || el.textContent.includes('$0')) {
+                el.classList.add('loading');
+                el.innerHTML = '&nbsp;';
+            }
+        });
+    });
+</script>
+
+{% endblock content %}

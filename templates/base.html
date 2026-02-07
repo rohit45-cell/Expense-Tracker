@@ -1,0 +1,743 @@
+{% load static %}
+{% load static tailwind_tags %}
+
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.122.0">
+  <title>ExpenseTracker {% block title %}
+
+    {% endblock title %}</title>
+  
+  <!-- Custom styles for this template -->
+  <style>
+    /* Global Animations */
+    * {
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Header animations */
+    header.bg-black {
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      animation: slideDown 0.5s ease-out;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header.bg-black::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    /* Logo animation */
+    img.w-auto.h-6.md\:h-8 {
+      animation: logoPulse 2s ease-in-out infinite;
+      transition: transform 0.3s ease;
+    }
+
+    img.w-auto.h-6.md\:h-8:hover {
+      transform: rotate(10deg) scale(1.1);
+    }
+
+    @keyframes logoPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* Welcome text animation */
+    h2.text-xl.md\:text-3xl {
+      position: relative;
+      overflow: hidden;
+      animation: textReveal 0.8s ease-out;
+    }
+
+    h2.text-xl.md\:text-3xl::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    h2.text-xl.md\:text-3xl:hover::after {
+      transform: scaleX(1);
+    }
+
+    @keyframes textReveal {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Sidebar animations */
+    #sidebar {
+      animation: slideInLeft 0.3s ease-out;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Sidebar items animations */
+    .flex.gap-2.items-center.m-2.text-blue-700 {
+      position: relative;
+      padding: 0.75rem 1rem;
+      margin: 0.25rem 0.5rem;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      animation: slideInFromLeft 0.5s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .flex.gap-2.items-center.m-2.text-blue-700:hover {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      transform: translateX(8px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
+    .flex.gap-2.items-center.m-2.text-blue-700::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+      border-radius: 0 2px 2px 0;
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s ease;
+    }
+
+    .flex.gap-2.items-center.m-2.text-blue-700:hover::before {
+      transform: scaleY(1);
+    }
+
+    @keyframes slideInFromLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Stagger sidebar items */
+    .mt-7 .flex.gap-2.items-center.m-2.text-blue-700:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+    .mt-7 .flex.gap-2.items-center.m-2.text-blue-700:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .mt-7 + .mt-7 .flex.gap-2.items-center.m-2.text-blue-700:nth-child(1) {
+      animation-delay: 0.3s;
+    }
+    .mt-7 + .mt-7 .flex.gap-2.items-center.m-2.text-blue-700:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+    .mt-7 + .mt-7 .flex.gap-2.items-center.m-2.text-blue-700:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+
+    /* Sidebar icons animation */
+    .flex.gap-2.items-center.m-2.text-blue-700 svg {
+      transition: all 0.3s ease;
+      min-width: 1rem;
+    }
+
+    .flex.gap-2.items-center.m-2.text-blue-700:hover svg {
+      transform: scale(1.2) rotate(5deg);
+      fill: #3b82f6;
+    }
+
+    /* Sidebar text animation */
+    .flex.gap-2.items-center.m-2.text-blue-700 .text-sm {
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .flex.gap-2.items-center.m-2.text-blue-700:hover .text-sm {
+      color: #1d4ed8;
+      transform: translateX(3px);
+    }
+
+    /* Close button animation */
+    #close-sidebar {
+      transition: all 0.3s ease;
+      padding: 0.5rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    #close-sidebar:hover {
+      background-color: rgba(229, 231, 235, 0.5);
+      transform: rotate(90deg);
+    }
+
+    /* Section titles in sidebar */
+    .text-xs h5 {
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #6b7280;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+      position: relative;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .text-xs h5::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 3px;
+      height: 12px;
+      background: #3b82f6;
+      border-radius: 2px;
+      transform: translateY(-50%);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Main content animation */
+    main.col-span-12.md\:col-span-9.lg\:col-span-10 {
+      animation: contentFadeIn 0.6s ease-out;
+    }
+
+    @keyframes contentFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile menu button animation */
+    [data-collapse-toggle="navbar-default"] {
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 60;
+    }
+
+    [data-collapse-toggle="navbar-default"]:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: scale(1.1);
+    }
+
+    [data-collapse-toggle="navbar-default"]:active {
+      transform: scale(0.95);
+    }
+
+    /* Grid animation */
+    section.grid.grid-cols-12.gap-4 {
+      animation: gridAppear 0.8s ease-out;
+    }
+
+    @keyframes gridAppear {
+      from {
+        opacity: 0;
+        filter: blur(5px);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+      }
+    }
+
+    /* Background sidebar animation */
+    .bg-blue-50.border-2.border-blue-100 {
+      animation: sidebarGlow 3s ease-in-out infinite alternate;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-blue-50.border-2.border-blue-100::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+      animation: moveBackground 20s linear infinite;
+    }
+
+    @keyframes sidebarGlow {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+      }
+    }
+
+    @keyframes moveBackground {
+      from {
+        transform: translate(0, 0);
+      }
+      to {
+        transform: translate(20px, 20px);
+      }
+    }
+
+    /* Dark mode adjustments */
+    .dark header.bg-black {
+      background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+    }
+
+    .dark .bg-blue-50.border-2.border-blue-100 {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-color: #334155;
+    }
+
+    .dark .flex.gap-2.items-center.m-2.text-blue-700:hover {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+    }
+
+    .dark #sidebar {
+      background-color: #1f2937;
+      border-color: #374151;
+    }
+
+    /* Responsive animations */
+    @media (max-width: 768px) {
+      .flex.gap-2.items-center.m-2.text-blue-700:hover {
+        transform: translateX(4px);
+      }
+      
+      header.bg-black {
+        padding: 0.75rem 1rem;
+      }
+    }
+
+    /* Loading animation for content */
+    .loading-content {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading-content::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      animation: loadingShimmer 1.5s infinite;
+    }
+
+    @keyframes loadingShimmer {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    /* Notification badge animation */
+    .notification-badge {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+      }
+    }
+
+    /* Enhanced button animations */
+    button, a[href] {
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::after, a[href]::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+    }
+
+    button:active::after, a[href]:active::after {
+      width: 200px;
+      height: 200px;
+    }
+  </style>
+  
+  {% tailwind_css %}
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+  <header class="bg-black text-white p-2 flex justify-between items-center">
+    <button data-collapse-toggle="navbar-default" type="button"
+      class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-100 rounded-lg md:hidden hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 transition-all duration-300"
+      aria-controls="navbar-default" aria-expanded="false">
+      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M1 1h15M1 7h15M1 13h15" />
+      </svg>
+    </button>
+    
+    <h2
+      class="md:hidden mr-2 md:mr-5 text-xl md:text-3xl font-extrabold leading-none tracking-tight text-white dark:text-white">
+      Welcome {% if user.first_name %}{{request.user.first_name}}
+      {% else %}
+      {{request.user.username}}{% endif %}
+    </h2>
+    
+    <img class="md:hidden w-auto h-6 md:h-8" src="{% static 'img/logo.png' %}" alt="logo">
+
+    <div class="hidden md:flex ml-5 gap-2 items-center">
+      <img class="w-auto h-6 md:h-8" src="{% static 'img/logo.png' %}" alt="logo">
+      <div>
+        <h1 class="text-xl md:text-3xl font-extrabold leading-none tracking-tight text-white dark:text-white">
+          Expense Tracker <span class="text-blue-400">💰</span>
+        </h1>
+      </div>
+    </div>
+    
+    <h2
+      class="hidden md:block mr-2 md:mr-5 text-xl md:text-3xl font-extrabold leading-none tracking-tight text-white dark:text-white">
+      Welcome {% if user.first_name %}{{request.user.first_name}}
+      {% else %}
+      {{request.user.username}}{% endif %} 👋
+    </h2>
+  </header>
+
+  <!-- Mobile Sidebar -->
+  <div id="sidebar"
+    class="fixed top-0 left-0 w-64 h-full p-4 bg-white border-2 border-blue-50 transform -translate-x-full transition-transform duration-300 md:hidden z-50 shadow-2xl">
+
+    <button id="close-sidebar" class="text-gray-900 hover:bg-gray-100 p-2 rounded-lg mb-4 transition-all duration-300">
+      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Dashboard -->
+    <div class="flex gap-2 items-center m-2 text-blue-700">
+      <div class="transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="blue" class="size-5">
+          <path
+            d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+          <path
+            d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+        </svg>
+      </div>
+      <div class="text-sm font-medium">
+        <a href="{% url 'home' %}">Dashboard</a>
+      </div>
+    </div>
+
+    <!-- Expenses -->
+    <div class="flex gap-2 items-center m-2 text-blue-700">
+      <div class="transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="blue" class="size-5">
+          <path
+            d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
+        </svg>
+      </div>
+      <div class="text-sm font-medium">
+        <a href="{% url 'expenses' %}">Expenses</a>
+      </div>
+    </div>
+
+    <!-- Incomes -->
+    <div class="flex gap-2 items-center m-2 text-blue-700">
+      <div class="transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="blue" class="size-5">
+          <path fill-rule="evenodd"
+            d="M5.478 5.559A1.5 1.5 0 0 1 6.912 4.5H9A.75.75 0 0 0 9 3H6.912a3 3 0 0 0-2.868 2.118l-2.411 7.838a3 3 0 0 0-.133.882V18a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-4.162c0-.299-.045-.596-.133-.882l-2.412-7.838A3 3 0 0 0 17.088 3H15a.75.75 0 0 0 0 1.5h2.088a1.5 1.5 0 0 1 1.434 1.059l2.213 7.191H17.89a3 3 0 0 0-2.684 1.658l-.256.513a1.5 1.5 0 0 1-1.342.829h-3.218a1.5 1.5 0 0 1-1.342-.83l-.256-.512a3 3 0 0 0-2.684-1.658H3.265l2.213-7.191Z"
+            clip-rule="evenodd" />
+          <path fill-rule="evenodd"
+            d="M12 2.25a.75.75 0 0 1 .75.75v6.44l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 1.06-1.06l1.72 1.72V3a.75.75 0 0 1 .75-.75Z"
+            clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div class="text-sm font-medium">
+        <a href="{% url 'incomes' %}">Incomes</a>
+      </div>
+    </div>
+
+    <!-- SUMMARY Section -->
+    <div class="mt-7">
+      <div class="text-xs">
+        <h5>📊 SUMMARY</h5>
+      </div>
+      <div class="flex gap-2 items-center m-2 text-blue-700">
+        <div class="transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="blue" class="size-5">
+            <path
+              d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.5 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
+            <path
+              d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+          </svg>
+        </div>
+        <div class="text-sm font-medium">
+          <a href="{% url 'expense-stats' %}">Expense Summary</a>
+        </div>
+      </div>
+      <div class="flex gap-2 items-center m-2 text-blue-700">
+        <div class="transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="blue" class="size-5">
+            <path
+              d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.5 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
+            <path
+              d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+          </svg>
+        </div>
+        <div class="text-sm font-medium">
+          <a href="{% url 'income-stats' %}">Income Summary</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS Section -->
+    <div class="mt-7">
+      <div>
+        <h5 class="text-xs">⚙️ SETTINGS</h5>
+      </div>
+      <div class="flex gap-2 items-center m-2 text-blue-700">
+        <div class="transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="blue" class="size-5">
+            <path fill-rule="evenodd"
+              d="M11.828 2.25c-.916 0-1.699.663-1.85 1.567l-.091.549a.798.798 0 0 1-.517.608 7.45 7.45 0 0 0-.478.198.798.798 0 0 1-.796-.064l-.453-.324a1.875 1.875 0 0 0-2.416.2l-.243.243a1.875 1.875 0 0 0-.2 2.416l.324.453a.798.798 0 0 1 .064.796 7.448 7.448 0 0 0-.198.478.798.798 0 0 1-.608.517l-.55.092a1.875 1.875 0 0 0-1.566 1.849v.344c0 .916.663 1.699 1.567 1.85l.549.091c.281.047.508.25.608.517.06.162.127.321.198.478a.798.798 0 0 1-.064.796l-.324.453a1.875 1.875 0 0 0 .2 2.416l.243.243c.648.648 1.67.733 2.416.2l.453-.324a.798.798 0 0 1 .796-.064c.157.071.316.137.478.198.267.1.47.327.517.608l.092.55c.15.903.932 1.566 1.849 1.566h.344c.916 0 1.699-.663 1.85-1.567l.091-.549a.798.798 0 0 1 .517-.608 7.52 7.52 0 0 0 .478-.198.798.798 0 0 1 .796.064l.453.324a1.875 1.875 0 0 0 2.416-.2l.243-.243c.648-.648.733-1.67.2-2.416l-.324-.453a.798.798 0 0 1-.064-.796c.071-.157.137-.316.198-.478.1-.267.327-.47.608-.517l.55-.091a1.875 1.875 0 0 0 1.566-1.85v-.344c0-.916-.663-1.699-1.567-1.85l-.549-.091a.798.798 0 0 1-.608-.517 7.507 7.507 0 0 0-.198-.478.798.798 0 0 1 .064-.796l.324-.453a1.875 1.875 0 0 0-.2-2.416l-.243-.243a1.875 1.875 0 0 0-2.416-.2l-.453.324a.798.798 0 0 1-.796.064 7.462 7.462 0 0 0-.478-.198.798.798 0 0 1-.517-.608l-.091-.55a1.875 1.875 0 0 0-1.85-1.566h-.344ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z"
+              clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="text-sm font-medium">
+          <a href="{% url 'preference' %}">General</a>
+        </div>
+      </div>
+      <div class="flex gap-2 items-center m-2 text-blue-700">
+        <div class="transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="blue" class="size-5">
+            <path fill-rule="evenodd"
+              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+              clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="text-sm font-medium">
+          <a href="{% url 'profile' %}">Account</a>
+        </div>
+      </div>
+      <div class="flex gap-2 items-center m-2 text-blue-700">
+        <div class="transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="blue" class="size-5">
+            <path fill-rule="evenodd"
+              d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm5.03 4.72a.75.75 0 0 1 0 1.06l-1.72 1.72h10.94a.75.75 0 0 1 0 1.5H10.81l1.72 1.72a.75.75 0 1 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 0Z"
+              clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="text-sm font-medium">
+          <a href="{% url 'logout' %}">Sign out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include "components/messages.html" %}
+
+  <section class="grid grid-cols-12 gap-4 min-h-[calc(100vh-4rem)]">
+    <section class="hidden md:block md:col-span-3 lg:col-span-2 p-4 bg-blue-50 border-2 border-blue-100">
+      {% include "components/sidebar.html" %}
+    </section>
+
+    <main class="col-span-12 md:col-span-9 lg:col-span-10 p-4 md:p-6">
+      {% block content %}
+      {% endblock content %}
+    </main>
+  </section>
+
+  <script>
+    // Mobile sidebar functionality
+    const toggleButton = document.querySelector('[data-collapse-toggle="navbar-default"]');
+    const sidebar = document.getElementById('sidebar');
+    const closeSidebarButton = document.getElementById('close-sidebar');
+
+    toggleButton.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+      document.body.style.overflow = sidebar.classList.contains('-translate-x-full') ? 'auto' : 'hidden';
+    });
+
+    closeSidebarButton.addEventListener('click', () => {
+      sidebar.classList.add('-translate-x-full');
+      document.body.style.overflow = 'auto';
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (!sidebar.contains(e.target) && !toggleButton.contains(e.target) && 
+          !sidebar.classList.contains('-translate-x-full') && window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full');
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // Add hover effect to sidebar items
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebarItems = document.querySelectorAll('.flex.gap-2.items-center.m-2.text-blue-700');
+      
+      sidebarItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateX(8px)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateX(0)';
+        });
+      });
+
+      // Add ripple effect to buttons
+      const buttons = document.querySelectorAll('button, a[href]');
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          // Only add ripple if it's not a link that navigates away
+          if (this.tagName === 'A' && this.getAttribute('href') && 
+              !this.getAttribute('href').startsWith('#')) {
+            return;
+          }
+          
+          const rect = this.getBoundingClientRect();
+          const ripple = document.createElement('span');
+          const size = Math.max(rect.width, rect.height);
+          const x = e.clientX - rect.left - size / 2;
+          const y = e.clientY - rect.top - size / 2;
+          
+          ripple.style.cssText = `
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            width: ${size}px;
+            height: ${size}px;
+            top: ${y}px;
+            left: ${x}px;
+            pointer-events: none;
+            z-index: 1;
+          `;
+          
+          this.appendChild(ripple);
+          
+          setTimeout(() => {
+            ripple.remove();
+          }, 600);
+        });
+      });
+
+      // Add ripple animation to CSS
+      const rippleStyle = document.createElement('style');
+      rippleStyle.textContent = `
+        @keyframes ripple {
+          to {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(rippleStyle);
+    });
+
+    // Prevent body scroll when sidebar is open on mobile
+    function preventBodyScroll() {
+      if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    window.addEventListener('resize', preventBodyScroll);
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js"
+    integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

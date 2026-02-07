@@ -1,0 +1,585 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* Animation Keyframes */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+        }
+        70% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+        }
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        }
+    }
+    
+    @keyframes shimmer {
+        0% {
+            background-position: -1000px 0;
+        }
+        100% {
+            background-position: 1000px 0;
+        }
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+    
+    @keyframes typewriter {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+    }
+    
+    @keyframes gradientFlow {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    
+    /* Main Container Animation */
+    .container.mx-auto.mt-8 {
+        animation: fadeInUp 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        opacity: 0;
+    }
+    
+    /* Breadcrumb Animation */
+    nav.flex.text-2xl {
+        animation: slideInLeft 0.6s ease-out 0.2s both;
+        position: relative;
+        padding: 10px 0;
+    }
+    
+    nav.flex.text-2xl::before {
+        content: "📍";
+        position: absolute;
+        left: -40px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5rem;
+        animation: bounce 2s infinite;
+    }
+    
+    /* Breadcrumb Items */
+    .inline-flex.items-center.space-x-1 li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .inline-flex.items-center.space-x-1 li a {
+        position: relative;
+        padding: 5px 10px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .inline-flex.items-center.space-x-1 li a:hover {
+        animation: pulse 1.5s infinite;
+        transform: translateY(-2px);
+    }
+    
+    .inline-flex.items-center.space-x-1 li a::after {
+        content: "💰";
+        margin-left: 5px;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+    }
+    
+    .inline-flex.items-center.space-x-1 li a:hover::after {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    /* Breadcrumb Separator */
+    .inline-flex.items-center.space-x-1 li:not(:last-child)::after {
+        content: "➡️";
+        margin: 0 10px;
+        animation: float 3s infinite;
+        font-size: 0.9rem;
+    }
+    
+    /* Current Page Breadcrumb */
+    .text-gray-500 {
+        position: relative;
+        padding: 5px 15px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        animation: slideInRight 0.6s ease-out 0.4s both;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .text-gray-500::before {
+        content: "✏️";
+        animation: bounce 1.5s infinite;
+    }
+    
+    /* Delete Button Animation */
+    .bg-red-500 {
+        animation: slideInRight 0.6s ease-out 0.4s both;
+        position: relative;
+        overflow: hidden;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        background: linear-gradient(45deg, #ef4444, #dc2626);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+    
+    .bg-red-500:hover {
+        animation: pulse 1s infinite;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+    }
+    
+    .bg-red-500::before {
+        content: "🗑️";
+        margin-right: 8px;
+    }
+    
+    .bg-red-500::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        animation: shimmer 2s infinite;
+    }
+    
+    /* Form Container */
+    .bg-white.shadow-md.rounded-lg.p-6 {
+        animation: fadeInUp 0.8s ease-out 0.6s both;
+        opacity: 0;
+        border: 1px solid;
+        border-image: linear-gradient(45deg, #3b82f6, #8b5cf6) 1;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+    
+    .bg-white.shadow-md.rounded-lg.p-6::before {
+        content: "💸 Edit Your Income";
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+        color: white;
+        padding: 5px 20px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        z-index: 10;
+        animation: pulse 2s infinite;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Form Labels */
+    .block.text-sm.font-medium.text-gray-700 {
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #374151;
+        animation: slideInLeft 0.5s ease-out 0.8s both;
+        opacity: 0;
+    }
+    
+    .block.text-sm.font-medium.text-gray-700::before {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.1rem;
+    }
+    
+    /* Amount Field */
+    #amount + label::before {
+        content: "💰";
+    }
+    
+    #amount {
+        animation: slideInRight 0.5s ease-out 0.9s both;
+        opacity: 0;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #fefce8, #fef3c7);
+        font-weight: 600;
+        color: #92400e;
+    }
+    
+    #amount:focus {
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+    }
+    
+    #amount::placeholder {
+        color: #d97706;
+        opacity: 0.7;
+    }
+    
+    /* Description Field */
+    #description + label::before {
+        content: "📝";
+    }
+    
+    #description {
+        animation: slideInRight 0.5s ease-out 1s both;
+        opacity: 0;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        font-weight: 500;
+    }
+    
+    #description:focus {
+        border-color: #0ea5e9;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    }
+    
+    /* Source Field */
+    select[name="source"] + label::before {
+        content: "🏢";
+    }
+    
+    select[name="source"] {
+        animation: slideInRight 0.5s ease-out 1.1s both;
+        opacity: 0;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        font-weight: 500;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2310b981'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.7rem center;
+        background-size: 1.2em;
+        padding-right: 2.5rem;
+    }
+    
+    select[name="source"]:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    }
+    
+    /* Date Field */
+    input[name="date"] + label::before {
+        content: "📅";
+    }
+    
+    input[name="date"] {
+        animation: slideInRight 0.5s ease-out 1.2s both;
+        opacity: 0;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+        font-weight: 500;
+        color: #7c3aed;
+    }
+    
+    input[name="date"]:focus {
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+    }
+    
+    /* Submit Button */
+    input[type="submit"] {
+        animation: slideInRight 0.5s ease-out 1.3s both;
+        opacity: 0;
+        position: relative;
+        overflow: hidden;
+        font-weight: 600;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        background: linear-gradient(45deg, #3b82f6, #8b5cf6, #3b82f6);
+        background-size: 200% 200%;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        animation: slideInRight 0.5s ease-out 1.3s both, gradientFlow 3s ease infinite;
+    }
+    
+    input[type="submit"]:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        animation: pulse 1s infinite, gradientFlow 3s ease infinite;
+    }
+    
+    input[type="submit"]::before {
+        content: "💾";
+        margin-right: 10px;
+        animation: bounce 1s infinite;
+    }
+    
+    input[type="submit"]::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        animation: shimmer 2s infinite;
+    }
+    
+    /* Success Message Animation */
+    .alert-success {
+        animation: fadeInUp 0.5s ease-out;
+        border-left: 4px solid #10b981;
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .alert-success::before {
+        content: "✅";
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5rem;
+        animation: bounce 2s infinite;
+    }
+    
+    /* Error Message Animation */
+    .alert-error {
+        animation: fadeInUp 0.5s ease-out;
+        border-left: 4px solid #ef4444;
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .alert-error::before {
+        content: "❌";
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5rem;
+        animation: bounce 2s infinite;
+    }
+    
+    /* Form Group Hover Effects */
+    .mb-4:hover label {
+        transform: translateX(5px);
+        transition: transform 0.3s ease;
+    }
+    
+    .mb-4:hover label::before {
+        animation: bounce 1s infinite;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .flex.justify-between.items-center {
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        nav.flex.text-2xl::before {
+            display: none;
+        }
+        
+        .inline-flex.items-center.space-x-1 li:not(:last-child)::after {
+            content: "⬇️";
+            animation: float 2s infinite;
+        }
+        
+        .bg-white.shadow-md.rounded-lg.p-6::before {
+            font-size: 0.8rem;
+            top: -12px;
+            padding: 4px 15px;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .bg-white.shadow-md.rounded-lg.p-6 {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            border-image: linear-gradient(45deg, #60a5fa, #a78bfa) 1;
+        }
+        
+        .block.text-sm.font-medium.text-gray-700 {
+            color: #d1d5db;
+        }
+        
+        #amount, #description, select[name="source"], input[name="date"] {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            border-color: #4b5563;
+            color: #f3f4f6;
+        }
+        
+        .bg-red-500 {
+            background: linear-gradient(45deg, #f87171, #ef4444);
+        }
+    }
+    
+    /* Loading State */
+    .loading {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .loading::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        animation: shimmer 1.5s infinite;
+    }
+    
+    /* Accessibility Focus Styles */
+    *:focus {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+    }
+</style>
+
+<div class="container mx-auto mt-8">
+    <div class="flex justify-between items-center mb-4 mx-4">
+        <nav class="flex text-2xl" aria-label="breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="{% url 'incomes'%}" class="text-blue-600 hover:text-blue-800">Incomes 💰</a>
+                </li>
+                <li aria-current="page">
+                    <span class="text-gray-500">Edit Income ✏️</span>
+                </li>
+            </ol>
+        </nav>
+        <a href="{% url 'delete-income' income.id %}"
+            class="bg-red-500 text-white px-3 py-1 text-sm rounded hover:bg-red-600">🗑️ Delete Income</a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <form action="{% url 'edit-income' income.id %}" method="post">
+            {% include 'components/messages.html'%}
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="amount" class="block text-sm font-medium text-gray-700">💰 Amount</label>
+                <input required type="text" name="amount" id="amount" value="{{ income.amount }}"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                    placeholder="Enter amount in ₹" />
+            </div>
+            <div class="mb-4">
+                <label for="description" class="block text-sm font-medium text-gray-700">📝 Description</label>
+                <input required type="text" name="description" id="description" value="{{ income.description }}"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="What's this income for?" />
+            </div>
+            <div class="mb-4">
+                <label for="source" class="block text-sm font-medium text-gray-700">🏢 Source</label>
+                <select required name="source"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <option selected value="{{income.source}}">📌 {{income.source}}</option>
+                    {% for source in sources %}
+                    <option value="{{source.name}}">💼 {{source.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="date" class="block text-sm font-medium text-gray-700">📅 Date of Income</label>
+                <input type="date" name="date" value="{{income.date |date:'Y-m-d' }}"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+            </div>
+
+            <input type="submit" value="💾 Save Income"
+                class="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 w-full font-semibold text-lg transition-all duration-300" />
+        </form>
+    </div>
+</div>
+
+{% endblock %}

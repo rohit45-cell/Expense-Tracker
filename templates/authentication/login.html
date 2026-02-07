@@ -1,0 +1,320 @@
+{% extends "base_auth.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* Gradient background animation */
+    .bg-gray-50 {
+        background: linear-gradient(-45deg, #f9fafb, #f3f4f6, #e5e7eb, #d1d5db);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dark\:bg-gray-900 {
+        background: linear-gradient(-45deg, #111827, #1f2937, #374151, #4b5563);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    /* Logo animation */
+    .w-8.h-8.mr-2 {
+        animation: floatLogo 3s ease-in-out infinite;
+    }
+
+    @keyframes floatLogo {
+        0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-10px) rotate(5deg);
+        }
+    }
+
+    /* Card entrance animation */
+    .w-full.bg-white.rounded-lg.shadow {
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Form elements animations */
+    h1.text-xl {
+        animation: fadeIn 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Input field animations */
+    input[type="text"], input[type="password"] {
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    input[type="text"]:hover, input[type="password"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+        animation: pulseFocus 2s infinite;
+    }
+
+    @keyframes pulseFocus {
+        0%, 100% {
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+        }
+        50% {
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.25);
+        }
+    }
+
+    /* Button animations */
+    button[type="submit"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-size: 200% 200%;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    button[type="submit"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        background-position: right center;
+    }
+
+    button[type="submit"]:active {
+        transform: translateY(-1px);
+    }
+
+    button[type="submit"]::before {
+        content: '🚀';
+        position: absolute;
+        right: -20px;
+        transition: all 0.3s ease;
+    }
+
+    button[type="submit"]:hover::before {
+        right: 15px;
+    }
+
+    /* Link animations */
+    a.font-medium.text-primary-600 {
+        position: relative;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    a.font-medium.text-primary-600:hover {
+        transform: translateX(5px);
+    }
+
+    a.font-medium.text-primary-600::after {
+        content: '👉';
+        position: absolute;
+        right: -20px;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    a.font-medium.text-primary-600:hover::after {
+        opacity: 1;
+        right: -25px;
+    }
+
+    /* Label animations */
+    label.block.mb-2 {
+        animation: slideInLabel 0.5s ease-out both;
+        animation-delay: calc(var(--order) * 0.1s);
+    }
+
+    @keyframes slideInLabel {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* First label */
+    label.block.mb-2:nth-child(1) {
+        --order: 1;
+    }
+
+    /* Second label */
+    label.block.mb-2:nth-child(2) {
+        --order: 2;
+    }
+
+    /* Input fields staggered animation */
+    div.space-y-4.md\:space-y-6 > div:nth-child(1) {
+        animation: slideInInput 0.5s ease-out 0.3s both;
+    }
+
+    div.space-y-4.md\:space-y-6 > div:nth-child(2) {
+        animation: slideInInput 0.5s ease-out 0.5s both;
+    }
+
+    @keyframes slideInInput {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Messages animation */
+    #messages {
+        animation: shakeMessage 0.5s ease-in-out;
+    }
+
+    @keyframes shakeMessage {
+        0%, 100% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-5px);
+        }
+        75% {
+            transform: translateX(5px);
+        }
+    }
+
+    /* Responsive animations */
+    @media (max-width: 768px) {
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+        }
+        
+        input[type="text"]:hover, input[type="password"]:hover {
+            transform: translateY(-1px);
+        }
+    }
+
+    /* Dark mode adjustments */
+    .dark input[type="text"]:focus,
+    .dark input[type="password"]:focus {
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Loading animation for form submission */
+    button[type="submit"].loading {
+        position: relative;
+        color: transparent;
+    }
+
+    button[type="submit"].loading::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
+</style>
+
+<section class="bg-gray-50 dark:bg-gray-900">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+            <img class="w-8 h-8 mr-2" src="{% static 'img/logo.png' %}" alt="logo">
+            Expense Tracker   
+        </a>
+        <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                    Sign in to your account
+                </h1>
+                {% include "components/messages.html" %}
+                
+                <form class="space-y-4 md:space-y-6" action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Username</label>
+                        <input type="text" name="username" id="username" value="{{fieldvalues.username}}" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="abc123" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                        <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                    </div>
+                    
+                    <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
+                    <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                        Don't have an account yet? <a href="{% url 'register' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Add loading animation to submit button
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.classList.add('loading');
+    });
+
+    // Add focus animation to inputs
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.animation = 'pulseFocus 2s infinite';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.style.animation = 'none';
+        });
+    });
+</script>
+
+{% endblock content %}
